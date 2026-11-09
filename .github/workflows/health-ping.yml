@@ -1,0 +1,13 @@
+name: fleet-health-ping
+# 每 6 小时巡检各牛马对外端点; 端点清单放仓库变量或 endpoints 文件
+on:
+  schedule:
+    - cron: "17 */6 * * *"
+  workflow_dispatch:
+jobs:
+  ping:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Probe endpoints
+        run: python3 scripts/health_check.py fleet-endpoints.json || true
