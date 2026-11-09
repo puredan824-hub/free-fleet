@@ -1,0 +1,21 @@
+name: supabase-keepalive
+# 每 3 天 ping 一次 Supabase REST, 防免费项目 7 天闲置自动暂停
+on:
+  schedule:
+    - cron: "23 3 */3 * *"
+  workflow_dispatch:
+jobs:
+  keepalive:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Ping Supabase REST
+        env:
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_ANON_KEY: ${{ secrets.SUPABASE_ANON_KEY }}
+        run: |
+          code=$(curl -s -o /dev/null -w "%{http_code}" \
+            "$SUPABASE_URL/rest/v1/fleet_events?select=id&limit=1" \
+            -H "apikey: $SUPABASE_ANON_KEY" \
+            -H "Authorization: Bearer $SUPABASE_ANON_KEY")
+          echo "supabase rest http=$code"
+          test "$code" = "200"
