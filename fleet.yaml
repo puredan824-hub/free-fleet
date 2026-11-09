@@ -1,0 +1,70 @@
+# 舰队登记表 —— 状态只认这里，改状态先改这里再同步 Supabase
+fleet:
+  - id: kaggle
+    name: Kaggle
+    role: gpu-batch
+    status: ready            # 已开通已验证
+    quota: "T4 x2, ~30 GPU-h/week, session <=12h"
+    entry: "https://www.kaggle.com/code/puredanpu/notebook5232dbffc3"
+    health: manual-notebook
+    notes: "用完关会话; 禁 VPS/节点/挂机"
+  - id: colab
+    name: Google Colab
+    role: gpu-backup
+    status: pending-notebook # 账号现成, 笔记本待建
+    quota: "T4 16GB, session <=12h, idle ~90min, quota dynamic"
+    entry: "https://colab.research.google.com"
+    health: manual-notebook
+  - id: simular
+    name: Simular Box (main)
+    role: agent-desktop-cold
+    status: claimed-no-api   # 已领取, 未建 API key / 未接 MCP
+    quota: "4C/7.7G/40G, 1000 credits/day"
+    entry: "https://box.simular.ai"
+    health: manual
+  - id: cloady
+    name: Cloady
+    role: resident-light-service
+    status: registered-empty # 已注册 Free/USE1, 未部署应用
+    quota: "0.5 vCPU / 1G / 5G, 1 workspace"
+    entry: "https://cloady.com"
+    health: pending-deploy
+    notes: "只跑轻活, 防超资源转收费"
+  - id: ghactions
+    name: GitHub Actions
+    role: scheduler-ci
+    status: pending-repo     # 待建舰队仓 + gh 授权
+    quota: "public repo unlimited standard runners; private 2000 min/mo; job <=6h"
+    health: workflow
+  - id: supabase
+    name: Supabase
+    role: state-db
+    status: pending-auth     # 未注册
+    quota: "2 projects, 500MB DB, 1GB files, 5GB egress; pauses after 7d idle"
+    health: rest-ping
+  - id: openrouter
+    name: OpenRouter
+    role: llm-api-light
+    status: pending-auth     # 未注册
+    quota: ":free models 20 RPM, 50 req/day"
+    health: api-key-check
+    notes: "每日预算闸 45 次"
+  - id: cf-workers
+    name: Cloudflare Workers
+    role: edge-gateway
+    status: pending-auth     # 未注册
+    quota: "100k req/day, 10ms CPU, cron triggers"
+    health: https-200
+  - id: cf-r2
+    name: Cloudflare R2
+    role: file-store
+    status: pending-auth     # 随 CF 账号; 开通可能要绑支付方式验证
+    quota: "10GB, 1M class-A/mo, 10M class-B/mo, egress free"
+    health: s3-head
+  - id: sakupa
+    name: Sakupa
+    role: showcase-preview
+    status: no-account-needed # 无账号制, 装 MCP 插件即用
+    quota: "free preview 30d renewable, max 3 sites; long-term JPY200/site/mo"
+    health: https-200
+    notes: "只做橱窗, 不承重"
